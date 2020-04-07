@@ -1,0 +1,69 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/nextcloud
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+
+      - run:
+          name: Build Nextcloud image
+          command: |
+            source ./circleci/release.sh
+            docker build -t fundocker/nextcloud:${CIRCLE_SHA1} \
+              --build-arg NEXTCLOUD_VERSION=${NEXTCLOUD_VERSION} \
+              .
+
+      - run:
+          name: list available images
+          command: docker images fundocker/nextcloud
+
+  hub:
+    working_directory: ~/nextcloud
+    machine:
+      docker_layer_caching: true
+    steps:
+      - checkout
+
+      - run:
+          name: Build Nextcloud image
+          command: |
+            source ./circleci/release.sh
+            docker build -t fundocker/nextcloud:${CIRCLE_SHA1} \
+              --build-arg NEXTCLOUD_VERSION=${NEXTCLOUD_VERSION} \
+              .
+
+      - run:
+          name: list available images
+          command: docker images fundocker/nextcloud
+
+      - run:
+          name: tag images
+          command: |
+            source ./circleci/release.sh
+            docker tag fundocker/nextcloud:${CIRCLE_SHA1} fundocker/nextcloud:latest
+            docker tag fundocker/nextcloud:${CIRCLE_SHA1} fundocker/nextcloud:${NEXTCLOUD_VERSION}
+
+      - run:
+          name: publish images
+          command: |
+            source ./circleci/release.sh
+            docker push fundocker/nextcloud:latest
+            docker push fundocker/nextcloud:${NEXTCLOUD_VERSION}
+
+workflows:
+  version: 2
+  nextcloud:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - hub:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*-fpm/
+
