@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Build Nextcloud image
           command: |
-            source ./circleci/release.sh
+            source ./.circleci/release.sh
             docker build -t fundocker/nextcloud:${CIRCLE_SHA1} \
               --build-arg NEXTCLOUD_VERSION=${NEXTCLOUD_VERSION} \
               .
@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Build Nextcloud image
           command: |
-            source ./circleci/release.sh
+            source ./.circleci/release.sh
             docker build -t fundocker/nextcloud:${CIRCLE_SHA1} \
               --build-arg NEXTCLOUD_VERSION=${NEXTCLOUD_VERSION} \
               .
@@ -41,7 +41,7 @@ jobs:
       - run:
           name: tag images
           command: |
-            source ./circleci/release.sh
+            source ./.circleci/release.sh
             docker tag fundocker/nextcloud:${CIRCLE_SHA1} fundocker/nextcloud:latest
             docker tag fundocker/nextcloud:${CIRCLE_SHA1} fundocker/nextcloud:${NEXTCLOUD_VERSION}
 
