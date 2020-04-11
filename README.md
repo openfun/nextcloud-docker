@@ -49,3 +49,25 @@ Here are the steps to follow to publish a new image:
   to the image you want to publish.
 - Commit your changes, submit a pull request and once merged into master you
   will be able to tag a new version.
+
+## Using docker-compose
+
+To test this image a `docker-compose` configuration is added. It can build the image and run it.
+
+The installation of Nextcloud is not easy because we mount a `config.php` file in the `nextcloud` service containing
+`installed=true`. With this setting the installation always fails. A workaround is to create an other `Nextcloud` service
+dedicated to the installation and remove all volumes for this service.
+
+To ease the use of this `docker-compose` configuration a Makefile is added.
+
+First bootstrap the project, it will build the image and then install `Nextcloud`.
+
+```
+$ make bootstrap
+```
+
+Once `Nextcloud` install you can use the `run` task to start `Nextcloud` and you can use it at http://localhost:9000
+
+```
+$ make run
+```
