@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:12.2
+    env_file: env.d/db
+    ports:
+      - "5452:5432"
+
+  nextcloud:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - NEXTCLOUD_VERSION=${NEXTCLOUD_VERSION:-18.0.3-fpm}
+    image: dev/nextcloud:${NEXTCLOUD_VERSION:-18.0.3-fpm}
+    command: php -S 0.0.0.0:9000
+    working_dir: /app
+    env_file: env.d/app
+    ports:
+      - "9000:9000"
+    volumes: 
+      - ./docker/compose/nextcloud/config:/app/config/
+    depends_on: 
+      - db
+      - redis
+
+  # This service is used only to install Nextcloud
+  # Nextcloud installation fails if the config.php file provided
+  # in this repo is mounted
+  nextcloud-install:
+    image: dev/nextcloud:${NEXTCLOUD_VERSION:-18.0.3-fpm}
+    working_dir: /app
+    env_file: env.d/app
+    entrypoint: install.sh
+    depends_on: 
+      - db
+      - redis
+
+  redis:
+    image: redis:4
+
+  dockerize:
+    image: jwilder/dockerize
+

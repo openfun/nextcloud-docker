@@ -1,0 +1,4 @@
+# Database
+POSTGRES_DB=nextcloud
+POSTGRES_PASSWORD=pass
+POSTGRES_USER=nexcloud_user
