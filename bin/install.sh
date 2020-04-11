@@ -37,8 +37,6 @@ if [ -n "${NEXTCLOUD_ADMIN_USER+x}" ] && [ -n "${NEXTCLOUD_ADMIN_PASSWORD+x}" ];
         exit 1
     fi
 
-    php /app/occ app:enable user_saml
-
     touch /tmp/nextcloud/installed
 
 else
