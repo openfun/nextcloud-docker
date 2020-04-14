@@ -59,7 +59,7 @@ jobs:
       - run:
           name: publish images
           command: |
-            source ./circleci/release.sh
+            source ./.circleci/release.sh
             docker push fundocker/nextcloud:latest
             docker push fundocker/nextcloud:${NEXTCLOUD_VERSION}
 
