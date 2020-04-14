@@ -72,6 +72,8 @@ workflows:
             tags:
               only: /.*/
       - hub:
+          requires:
+            - build
           filters:
             branches:
               ignore: /.*/
